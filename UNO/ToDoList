@@ -1,0 +1,27 @@
+___To Do___
+
+revisit access modifiers of members in classes - what should be private / public / protected? do I need to change/correct some of these?
+
+
+
+GUI Design: 
+	
+	- Button to "Say UNO" for when player has one card left
+	- UI element to display when each CPU player has called UNO (speech bubble looking thing?)
+
+To Code:
+	- (in progress) Turn system (right now, only Human P1 ever plays anything)
+	- (in progress) Develop how Skip, Draw Two, and Draw Four do their Skipping (performSpecialBehavior() method in those Card subclasses)
+	- Develop how Reverse switches the Turn Direction (flip boolean Game.turnDirection which will need to be used by Turn System)
+	
+	- (in progress) AI for computer controlled players to play cards
+	- AI for computer players to "catch" a player that hasn't called UNO
+	
+	
+Completed:
+	- "You played a Wild! Which color is now in play?" selection
+	- Win Conditions - out of cards
+	- Card classes
+	- Game, Deck, Player classes
+	- tablePane is the GUI
+	- UNOGameApp, the launcher
