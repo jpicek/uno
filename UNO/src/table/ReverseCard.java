@@ -10,6 +10,6 @@ public final class ReverseCard extends Card {
 	public void performSpecialBehavior(tablePane t, Game g) {
 		// handle the "Next Turn" behavior for special cards
 		// and set the table properties correctly
-		
+		g.turnDirection = !g.turnDirection;
 	}
 }

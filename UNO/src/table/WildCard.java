@@ -10,7 +10,9 @@ public final class WildCard extends Card {
 	public void performSpecialBehavior(tablePane t, Game g) {
 		// handle the "Next Turn" behavior for special cards
 		// and set the table properties correctly
-		t.wildChooserPane.setVisible(true);
+		if (g.currentPlayer == 1) {
+			t.wildChooserPane.setVisible(true);
+		}
 	}
 	@Override
 	public boolean playCard(Game game) {

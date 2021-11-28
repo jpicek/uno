@@ -1,27 +1,28 @@
 ___To Do___
 
-revisit access modifiers of members in classes - what should be private / public / protected? do I need to change/correct some of these?
-
-
+revisit access modifiers of members in classes - what should be private / public / protected? a lot of these are just wrong and/or not set at all. should I change/correct some of these?
 
 GUI Design: 
-	
 	- Button to "Say UNO" for when player has one card left
 	- UI element to display when each CPU player has called UNO (speech bubble looking thing?)
+	- UI element to display arrow(s) for turn order (clockwise or counter)
+	- ...?
 
 To Code:
-	- (in progress) Turn system (right now, only Human P1 ever plays anything)
-	- (in progress) Develop how Skip, Draw Two, and Draw Four do their Skipping (performSpecialBehavior() method in those Card subclasses)
-	- Develop how Reverse switches the Turn Direction (flip boolean Game.turnDirection which will need to be used by Turn System)
-	
 	- (in progress) AI for computer controlled players to play cards
 	- AI for computer players to "catch" a player that hasn't called UNO
-	
+	- ...?
 	
 Completed:
+	- Turn system (right now, only Human P1 ever plays anything)
+	- Develop how Skip, Draw Two, and Draw Four do their Skipping (performSpecialBehavior() method in those Card subclasses)
+	- Develop how Reverse switches the Turn Direction (flip boolean Game.turnDirection which will need to be used by Turn System)
+	- Handle EDGE CASE: when the first discard card is either WILD: right now the only thing playable is another Wild... :/ what do the rules say even?
 	- "You played a Wild! Which color is now in play?" selection
 	- Win Conditions - out of cards
+	- Wild color choice button images created and added
+	- All card images created, re-named systematically, and added
 	- Card classes
 	- Game, Deck, Player classes
-	- tablePane is the GUI
+	- tablePane is the GUI, mostly designed, remaining GUI changes needed are shown above
 	- UNOGameApp, the launcher
