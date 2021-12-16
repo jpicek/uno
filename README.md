@@ -2,6 +2,10 @@
 the uno card game, single player vs 3 CPU opponents
 <br><br>
 
+12/15/2021<br>
+- bug fixes for playing WildDrawFour
+- arrows added to display current turn order
+
 11/28/2021<br>
 turn system implemented. To-do list better explained, and some new items added to it.
 

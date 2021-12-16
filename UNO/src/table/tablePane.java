@@ -36,14 +36,16 @@ public class tablePane extends BorderPane {
 	HBox gameInfo = new HBox();
 	Pane discardArea = new Pane();
 	Pane drawArea = new Pane();
-	Image unoCardBack = new Image("file:images/cardback.png");
+	Image unoCardBack = new Image("file:images\\cardback.png");
 	Text infoText = new Text();
 	boolean refreshed = false;
 	int lastRefreshedTurn;
 	boolean hasDrawnYet = false;
 	ImageView chooseRed, chooseBlue, chooseYellow, chooseGreen;
+	ImageView turnArrowTR, turnArrowTL, turnArrowBR, turnArrowBL;
 	Game g;
 	Timeline guiUpdating;
+	boolean WDF = false;
 	
 	public tablePane() {
 		g = new Game(this);
@@ -101,11 +103,11 @@ public class tablePane extends BorderPane {
 		pilesAndGameInfo.minWidth(300);
 		pilesAndGameInfo.setAlignment(Pos.CENTER);
 		pilesAndGameInfo.setHgap(50);
-		pilesAndGameInfo.add(gameInfo, 0, 0, 4, 1);
-		pilesAndGameInfo.add(discardArea, 0, 1, 1, 1);
-		pilesAndGameInfo.add(drawArea, 3, 1, 1, 1);
-		pilesAndGameInfo.add(wildDirections, 0, 2, 4, 1);
-		pilesAndGameInfo.add(wildChooserPane, 0, 3, 4, 1);
+		pilesAndGameInfo.add(gameInfo, 1, 1, 4, 1);
+		pilesAndGameInfo.add(discardArea, 1, 2, 1, 1);
+		pilesAndGameInfo.add(drawArea, 4, 2, 1, 1);
+		pilesAndGameInfo.add(wildDirections, 1, 3, 4, 1);
+		pilesAndGameInfo.add(wildChooserPane, 1, 4, 4, 1);
 		wildChooserPane.minHeight(200);
 		wildChooserPane.setSpacing(5);
 		wildChooserPane.setPadding(new Insets(0, 0, 0, 5));
@@ -121,18 +123,28 @@ public class tablePane extends BorderPane {
 		wildDirections.setAlignment(Pos.CENTER);
 		wildDirections.setVisible(false);
 		
-		chooseRed = new ImageView(new Image("file:images/chooseRed.png"));
-		chooseBlue = new ImageView(new Image("file:images/chooseBlue.png"));
-		chooseYellow = new ImageView(new Image("file:images/chooseYellow.png"));
-		chooseGreen = new ImageView(new Image("file:images/chooseGreen.png"));
+		chooseRed = new ImageView(new Image("file:images\\chooseRed.png"));
+		chooseBlue = new ImageView(new Image("file:images\\chooseBlue.png"));
+		chooseYellow = new ImageView(new Image("file:images\\chooseYellow.png"));
+		chooseGreen = new ImageView(new Image("file:images\\chooseGreen.png"));
+		
+		turnArrowTR = new ImageView(new Image("file:images\\roundedarrow.png"));
+		turnArrowTL = new ImageView(new Image("file:images\\roundedarrow.png"));
+		turnArrowBR = new ImageView(new Image("file:images\\roundedarrow.png"));
+		turnArrowBL = new ImageView(new Image("file:images\\roundedarrow.png"));
+		
+		pilesAndGameInfo.add(turnArrowTL, 0, 0);
+		pilesAndGameInfo.add(turnArrowTR, 5, 0);
+		pilesAndGameInfo.add(turnArrowBL, 0, 5);
+		pilesAndGameInfo.add(turnArrowBR, 5, 5);
 		
 		wildChooserPane.getChildren().addAll(chooseRed, chooseBlue, chooseYellow, chooseGreen);
 		wildChooserPane.setVisible(false);
 		
 		System.out.println(g.playedPile.peek().toString());
 		// gameInfo.getChildren().add(new Label(generateGameInfo(g)));
-		// discardArea.getChildren().add(new ImageView(new Image(new String("file:images/" + g.playedPile.peek().color + g.playedPile.peek().value + ".png"))));
-		drawArea.getChildren().add(new ImageView(new Image("file:images/cardback.png")));
+		// discardArea.getChildren().add(new ImageView(new Image(new String("file:images\\" + g.playedPile.peek().color + g.playedPile.peek().value + ".png"))));
+		drawArea.getChildren().add(new ImageView(new Image("file:images\\cardback.png")));
 		
 		Player gameWinner = Game.checkWinConditions();
 		boolean resultsDisplayed = false;
@@ -163,8 +175,30 @@ public class tablePane extends BorderPane {
 	
 		infoText.setText(generateGameInfo(g));
 		gameInfo.getChildren().add(infoText);
-		discardArea.getChildren().add(new ImageView(new Image(new String("file:images/" + g.playedPile.peek().color + g.playedPile.peek().value + ".png"))));
-
+		discardArea.getChildren().add(new ImageView(new Image(new String("file:images\\" + g.playedPile.peek().color + g.playedPile.peek().value + ".png"))));
+		
+		if (g.turnDirection) {
+			// clockwise
+			turnArrowTR.setScaleX(-1);
+			turnArrowTR.setRotate(90);
+			turnArrowTL.setScaleX(-1);
+			turnArrowTL.setRotate(0);
+			turnArrowBR.setScaleX(-1);
+			turnArrowBR.setRotate(180);
+			turnArrowBL.setScaleX(-1);
+			turnArrowBL.setRotate(270);
+		}
+		else {
+			// counter-clockwise
+			turnArrowTR.setScaleX(1);
+			turnArrowTR.setRotate(0);
+			turnArrowTL.setScaleX(1);
+			turnArrowTL.setRotate(270);
+			turnArrowBR.setScaleX(1);
+			turnArrowBR.setRotate(90);
+			turnArrowBL.setScaleX(1);
+			turnArrowBL.setRotate(180);
+		}
 		
 		////  Event handlers for buttons, player interactions
 		
@@ -199,6 +233,11 @@ public class tablePane extends BorderPane {
 		// clicking on color choices from the Wild Color Chooser
 		chooseRed.setOnMouseReleased( e -> {
 			g.setColor(CardColor.RED); wildChooserPane.setVisible(false);
+			if (WDF) {
+				// if a Wild Draw Four was played, skip turn too, and then set WDF to false
+				g.skipTurn();
+				 WDF = false;
+			}
 			try {
 				g.advanceTurn(this);
 			} catch(InterruptedException e1) {
@@ -206,6 +245,11 @@ public class tablePane extends BorderPane {
 		}});
 		chooseBlue.setOnMouseReleased( e -> {
 			g.setColor(CardColor.BLUE); wildChooserPane.setVisible(false);
+			if (WDF) {
+				// if a Wild Draw Four was played, skip turn too, and then set WDF to false
+				g.skipTurn();
+				 WDF = false;
+			}
 			try {
 				g.advanceTurn(this);
 			} catch(InterruptedException e1) {
@@ -213,12 +257,22 @@ public class tablePane extends BorderPane {
 		}});
 		chooseYellow.setOnMouseReleased( e -> {
 			g.setColor(CardColor.YELLOW); wildChooserPane.setVisible(false);
+			if (WDF) {
+				// if a Wild Draw Four was played, skip turn too, and then set WDF to false
+				g.skipTurn();
+				 WDF = false;
+			}
 			try {
 				g.advanceTurn(this);
 			} catch(InterruptedException e1) {
 				e1.printStackTrace();
 		}});
 		chooseGreen.setOnMouseReleased( e -> {
+			if (WDF) {
+				// if a Wild Draw Four was played, skip turn too, and then set WDF to false
+				g.skipTurn();
+				 WDF = false;
+			}
 			g.setColor(CardColor.GREEN); wildChooserPane.setVisible(false);
 			try {
 				g.advanceTurn(this);
@@ -229,7 +283,7 @@ public class tablePane extends BorderPane {
 		seat1.getChildren().clear();
 		// refresh Seat1, the Human player's seat, with event Handlers
 		for (Card c : Game.Human.hand) {
-			Image imageI = new Image(new String("file:images/" + c.color + c.value + ".png"));
+			Image imageI = new Image(new String("file:images\\" + c.color + c.value + ".png"));
 			ImageView i = new ImageView(imageI);
 			// Label l = new Label(c.toString());
 			
@@ -242,7 +296,7 @@ public class tablePane extends BorderPane {
 			i.setOnMouseExited(e -> { i.setScaleX(1.0); i.setScaleY(1.0); });
 			// when released mouse on card, attempt to play card
 			i.setOnMouseReleased(e -> {
-				// 
+				// attempted to play a card
 				if (c.playCard(g) && g.currentPlayer == 1) {
 					// if the card can be played
 					if (Game.Human.hand.remove(c)) {
@@ -312,7 +366,62 @@ public class tablePane extends BorderPane {
 				
 		gameInfo.getChildren().clear();
 		
+		if (g.turnDirection) {
+			// clockwise
+			turnArrowTR.setScaleX(-1);
+			turnArrowTR.setRotate(90);
+			turnArrowTL.setScaleX(-1);
+			turnArrowTL.setRotate(0);
+			turnArrowBR.setScaleX(-1);
+			turnArrowBR.setRotate(180);
+			turnArrowBL.setScaleX(-1);
+			turnArrowBL.setRotate(270);
+		}
+		else {
+			// counter-clockwise
+			turnArrowTR.setScaleX(1);
+			turnArrowTR.setRotate(0);
+			turnArrowTL.setScaleX(1);
+			turnArrowTL.setRotate(270);
+			turnArrowBR.setScaleX(1);
+			turnArrowBR.setRotate(90);
+			turnArrowBL.setScaleX(1);
+			turnArrowBL.setRotate(180);
+		}
+		
+		// update Seat 1
+		seat1.getChildren().clear();
+		for (Card c : Game.Human.hand) {
+			Image imageI = new Image(new String("file:images\\" + c.color + c.value + ".png"));
+			ImageView i = new ImageView(imageI);
+			seat1.getChildren().add(i);
+		}
+		
+		// update Seat 2
+		seat2.getChildren().clear();
+		for (Card c : Game.CPU_P2.hand) {
+			ImageView i = new ImageView(unoCardBack);
+			seat2.getChildren().add(i);
+			i.setRotate(270);
+		}
+		
+		// update Seat 3
+		seat3.getChildren().clear();
+		for (Card c : Game.CPU_P3.hand) {
+			ImageView i = new ImageView(unoCardBack);
+			seat3.getChildren().add(i);
+		}
+		
+		// update Seat 4
+		seat4.getChildren().clear();
+		for (Card c : Game.CPU_P4.hand) {
+			ImageView i = new ImageView(unoCardBack);
+			seat4.getChildren().add(i);
+			i.setRotate(90);
+		}
+		
 		if (winner != null) {
+			// need to clear the seat for the winner
 			infoText.setText(winner.name + " WINS!");
 			gameInfo.getChildren().add(infoText);
 			System.out.println(winner.name + " WINS!");
@@ -322,38 +431,8 @@ public class tablePane extends BorderPane {
 			
 			infoText.setText(generateGameInfo(g));
 			gameInfo.getChildren().add(infoText);
-			discardArea.getChildren().add(new ImageView(new Image(new String("file:images/" + g.playedPile.peek().color + g.playedPile.peek().value + ".png"))));
+			discardArea.getChildren().add(new ImageView(new Image(new String("file:images\\" + g.playedPile.peek().color + g.playedPile.peek().value + ".png"))));
 	
-			// update Seat1, the Human player's seat
-			seat1.getChildren().clear();
-			for (Card c : Game.Human.hand) {
-				Image imageI = new Image(new String("file:images/" + c.color + c.value + ".png"));
-				ImageView i = new ImageView(imageI);
-				seat1.getChildren().add(i);
-			}
-			
-			// update Seat 2
-			seat2.getChildren().clear();
-			for (Card c : Game.CPU_P2.hand) {
-				ImageView i = new ImageView(unoCardBack);
-				seat2.getChildren().add(i);
-				i.setRotate(270);
-			}
-			
-			// update Seat 3
-			seat3.getChildren().clear();
-			for (Card c : Game.CPU_P3.hand) {
-				ImageView i = new ImageView(unoCardBack);
-				seat3.getChildren().add(i);
-			}
-			
-			// update Seat 4
-			seat4.getChildren().clear();
-			for (Card c : Game.CPU_P4.hand) {
-				ImageView i = new ImageView(unoCardBack);
-				seat4.getChildren().add(i);
-				i.setRotate(90);
-			}
 			System.out.println("pane updated");
 		}
 		if (g.isGameFinished == true) {

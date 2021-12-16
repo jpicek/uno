@@ -2,18 +2,19 @@ ___To Do___
 
 revisit access modifiers of members in classes - what should be private / public / protected? a lot of these are just wrong and/or not set at all. should I change/correct some of these?
 
-GUI Design: 
+To Do / Future Additions and Ideas:
+  GUI Design: 
 	- Button to "Say UNO" for when player has one card left
-	- UI element to display when each CPU player has called UNO (speech bubble looking thing?)
-	- UI element to display arrow(s) for turn order (clockwise or counter)
-	- ...?
-
-To Code:
-	- (in progress) AI for computer controlled players to play cards
-	- AI for computer players to "catch" a player that hasn't called UNO
-	- ...?
+	- UI element to display when each CPU player has called UNO (speech bubble looking thing?)	
+  AI Improvements:
+	- further improve AI for computer controlled players to play cards
+	  -- right now just play the first playable card it comes across, lol. this could maybe be improved with a better designed algorithm
+	- AI for computer players to "catch" a player that hasn't called UNO (requires UNO button + p2-4 indicators added)
 	
 Completed:
+	- WildDrawFour was skipping turn immediately and not waiting for color selection from Human Player, this is now fixed
+	- AI improved: playing Wild now changes to "favorite Color" instead of just RED all the time 
+    - UI element to display arrow(s) for turn order (clockwise or counter)
 	- Turn system (right now, only Human P1 ever plays anything)
 	- Develop how Skip, Draw Two, and Draw Four do their Skipping (performSpecialBehavior() method in those Card subclasses)
 	- Develop how Reverse switches the Turn Direction (flip boolean Game.turnDirection which will need to be used by Turn System)

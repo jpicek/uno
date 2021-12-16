@@ -11,6 +11,7 @@ public final class WildDrawFourCard extends Card {
 		// handle the "Next Turn" behavior for special cards
 		// and set the table properties correctly
 		if (g.currentPlayer == 1) {
+			t.WDF = true;
 			t.wildChooserPane.setVisible(true);
 		}
 		// calculate the next player
@@ -26,7 +27,9 @@ public final class WildDrawFourCard extends Card {
 		// next player draws 4 cards
 		Player recipient = Game.getPlayer(recip);
 		g.draw(4, recipient);
-		g.skipTurn();
+		if (g.currentPlayer != 1) {
+			g.skipTurn();
+		}
 	}
 
 	@Override

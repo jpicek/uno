@@ -3,7 +3,6 @@ package table;
 import java.util.Collections;
 import java.util.Stack;
 
-import javafx.application.Platform;
 import table.Card.CardColor;
 import table.Card.CardValue;
 
@@ -74,7 +73,7 @@ public class Game implements Runnable {
 		this.currentTurnNumber++;
 		// to advance to next Player, we piggyback off of the skip Card's logic
 		currentPlayer = skipTurn();		
-		System.out.println("It is now turn #" + currentTurnNumber + ", Player is " + currentPlayer + "\nColor is " + this.colorOfPlayPile + " value is " + this.numberOfPlayPile);
+		System.out.println("\nIt is now turn #" + currentTurnNumber + ", Player is " + currentPlayer + "\nColor is " + this.colorOfPlayPile + " value is " + this.numberOfPlayPile);
 
 	}
 	
