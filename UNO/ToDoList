@@ -1,17 +1,18 @@
 ___To Do___
 
-revisit access modifiers of members in classes - what should be private / public / protected? a lot of these are just wrong and/or not set at all. should I change/correct some of these?
-
-To Do / Future Additions and Ideas:
-  GUI Design: 
-	- Button to "Say UNO" for when player has one card left
-	- UI element to display when each CPU player has called UNO (speech bubble looking thing?)	
-  AI Improvements:
-	- further improve AI for computer controlled players to play cards
-	  -- right now just play the first playable card it comes across, lol. this could maybe be improved with a better designed algorithm
-	- AI for computer players to "catch" a player that hasn't called UNO (requires UNO button + p2-4 indicators added)
+Future Additions and Ideas:
+	- A clearer indicator of who's turn it is (whether Human or CPU player) would be helpful
+	- it may actually be possible to empty the deck with just 4 players, and this possibility has not been coded for
+      (if that does happen, will definitely result in an ArrayList error when the deck has no more cards)
+    - AI Improvements:
+	  - further improve AI for computer controlled players to play cards
+	    (right now just play the first playable card it comes across, lol. this could maybe be improved with a better designed algorithm)
+	  - AI for computer players to "catch" a player that hasn't called UNO
+	    (requires UNO button + p2-4 indicators added)
 	
-Completed:
+Completed: 
+	- Button to "Say UNO" for when player has one card left
+	- CPU players "UNO" status added to Game Info
 	- WildDrawFour was skipping turn immediately and not waiting for color selection from Human Player, this is now fixed
 	- AI improved: playing Wild now changes to "favorite Color" instead of just RED all the time 
     - UI element to display arrow(s) for turn order (clockwise or counter)

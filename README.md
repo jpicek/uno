@@ -2,6 +2,10 @@
 the uno card game, single player vs 3 CPU opponents
 <br><br>
 
+12/16/2021<br>
+- Calling "UNO" implemented
+- Final Project version completed. future changes also planned in the To Do file
+
 12/15/2021<br>
 - bug fixes for playing WildDrawFour
 - arrows added to display current turn order

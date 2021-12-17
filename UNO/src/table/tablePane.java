@@ -1,7 +1,6 @@
 package table;
 
 import javafx.animation.Timeline;
-import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,7 +25,9 @@ public class tablePane extends BorderPane {
 	// 2   4	for reference
 	//   1		Game.turnDirection true is clockwise, false is counter-clockwise
 	
+	VBox humanSeat = new VBox();
 	HBox seat1 = new HBox();
+	HBox callUnoButton = new HBox();
 	VBox seat2 = new VBox();
 	HBox seat3 = new HBox();
 	VBox seat4 = new VBox();
@@ -43,9 +44,11 @@ public class tablePane extends BorderPane {
 	boolean hasDrawnYet = false;
 	ImageView chooseRed, chooseBlue, chooseYellow, chooseGreen;
 	ImageView turnArrowTR, turnArrowTL, turnArrowBR, turnArrowBL;
+	ImageView callUnoBtn;
 	Game g;
 	Timeline guiUpdating;
 	boolean WDF = false;
+	boolean unoCalled = false;
 	
 	public tablePane() {
 		g = new Game(this);
@@ -70,11 +73,15 @@ public class tablePane extends BorderPane {
 		guiUpdating.play();
 		
 		// seat 1 JavaFX properties
-		this.setBottom(seat1);
+		this.setBottom(humanSeat);
+		humanSeat.setAlignment(Pos.CENTER);
+		humanSeat.getChildren().addAll(callUnoButton,seat1);
+		callUnoButton.setAlignment(Pos.CENTER);
 		seat1.setMinHeight(200);
 		seat1.setMinWidth(500);
 		seat1.setSpacing(-25);
 		seat1.setAlignment(Pos.CENTER);
+		
 		
 		// seat 2 JavaFX properties
 		this.setLeft(seat2);
@@ -133,6 +140,10 @@ public class tablePane extends BorderPane {
 		turnArrowBR = new ImageView(new Image("file:images\\roundedarrow.png"));
 		turnArrowBL = new ImageView(new Image("file:images\\roundedarrow.png"));
 		
+		callUnoBtn = new ImageView(new Image("file:images\\callUnoButton.png"));
+		callUnoBtn.setVisible(false);
+		callUnoButton.getChildren().add(callUnoBtn);
+		
 		pilesAndGameInfo.add(turnArrowTL, 0, 0);
 		pilesAndGameInfo.add(turnArrowTR, 5, 0);
 		pilesAndGameInfo.add(turnArrowBL, 0, 5);
@@ -154,19 +165,31 @@ public class tablePane extends BorderPane {
 	
 	public String generateGameInfo(Game g) {
 		String t = "";
+		String unos = "";
 		if (g.turnDirection == false) {
 			t = "Counter-";
 		}
 		t += "Clockwise";
+		
+		for (int i = 1; i<= 4; i++) {
+			if (Game.getPlayer(i).hasUno()) {
+				unos += "\n " + Game.getPlayer(i).name + " has UNO";
+			}
+		}	
+	
 		return new String("Turn Number: " + g.currentTurnNumber + 
 						"\n      Player " + g.currentPlayer + "'s Turn" +
 						"\n  Direction: " + t +
 						"\n Play Color: " + g.colorOfPlayPile +
-						"\n Play Value: " + g.numberOfPlayPile);
+						"\n Play Value: " + g.numberOfPlayPile) +
+						unos;
 	}
 	
 	public void refreshPane(Game g) {
 		// a player's turn begins, allowing interaction via mouse hover + clicks
+		if (g.currentPlayer == 1) {
+			this.unoCalled = false;
+		}
 		hasDrawnYet = false;
 		lastRefreshedTurn = g.currentTurnNumber;
 		refreshed = true;
@@ -333,8 +356,6 @@ public class tablePane extends BorderPane {
 			ImageView i = new ImageView(unoCardBack);
 			seat2.getChildren().add(i);
 			i.setRotate(270);
-			//Label l = new Label(c.toString());
-			//seat3.getChildren().add(l);
 		}
 		
 		// update Seat 3
@@ -342,8 +363,6 @@ public class tablePane extends BorderPane {
 		for (Card c : Game.CPU_P3.hand) {
 			ImageView i = new ImageView(unoCardBack);
 			seat3.getChildren().add(i);
-			//Label l = new Label(c.toString());
-			//seat3.getChildren().add(l);
 		}
 
 		// update Seat 4
@@ -352,8 +371,6 @@ public class tablePane extends BorderPane {
 			ImageView i = new ImageView(unoCardBack);
 			seat4.getChildren().add(i);
 			i.setRotate(90);
-			//Label l = new Label(c.toString());
-			//seat3.getChildren().add(l);
 		}
 		System.out.println("refresh completed");
 	}
@@ -391,6 +408,18 @@ public class tablePane extends BorderPane {
 		
 		// update Seat 1
 		seat1.getChildren().clear();
+		if (Game.getPlayer(1).hasUno() && !this.unoCalled) {
+			callUnoBtn.setVisible(true);
+			// grow button on Hover
+			callUnoBtn.setOnMouseEntered(e -> { callUnoBtn.setScaleX(1.2); callUnoBtn.setScaleY(1.2); });
+			// reduce button to normal size when Hover ends
+			callUnoBtn.setOnMouseExited(e -> { callUnoBtn.setScaleX(1.0); callUnoBtn.setScaleY(1.0); });
+			callUnoBtn.setOnMouseReleased( e -> {
+				System.out.print("P1 called UNO!");
+				this.unoCalled = true;
+				callUnoBtn.setVisible(false);
+			});
+		}
 		for (Card c : Game.Human.hand) {
 			Image imageI = new Image(new String("file:images\\" + c.color + c.value + ".png"));
 			ImageView i = new ImageView(imageI);

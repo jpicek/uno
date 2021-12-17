@@ -16,6 +16,14 @@ public class Player {
 	protected boolean playCard() {
 		return true;
 	}
+	
+	public boolean hasUno() {
+		if (this.hand.size() == 1) {
+		return true;
+		} else {
+			return false;
+		}
+	}
 
 	
 	protected void pickFavoriteColor() {
